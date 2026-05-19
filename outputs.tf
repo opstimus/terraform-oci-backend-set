@@ -1,14 +1,19 @@
 output "backend_set_name" {
-  description = "Name of the created backend set, or null if skipped."
-  value       = length(oci_load_balancer_backend_set.main) > 0 ? oci_load_balancer_backend_set.main[0].name : null
+  description = "Name of the created backend set."
+  value       = oci_load_balancer_backend_set.main.name
 }
 
 output "backend_set_id" {
-  description = "OCID-based identifier of the backend set, or null if skipped."
-  value       = length(oci_load_balancer_backend_set.main) > 0 ? oci_load_balancer_backend_set.main[0].id : null
+  description = "Composite identifier (loadBalancers/{lb-ocid}/backendSets/{name}) of the backend set. This is not an OCID."
+  value       = oci_load_balancer_backend_set.main.id
 }
 
 output "routing_policy_name" {
-  description = "Name of the routing policy, or null if not created."
-  value       = length(oci_load_balancer_routing_policy.main) > 0 ? oci_load_balancer_routing_policy.main[0].name : null
+  description = "Name of the routing policy."
+  value       = oci_load_balancer_load_balancer_routing_policy.main.name
+}
+
+output "backend_address" {
+  description = "Registered backend address in ip:port format."
+  value       = "${oci_load_balancer_backend.main.ip_address}:${oci_load_balancer_backend.main.port}"
 }

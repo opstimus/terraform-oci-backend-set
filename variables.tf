@@ -14,42 +14,83 @@ variable "name" {
 }
 
 variable "load_balancer_id" {
-  description = "OCID of the load balancer. All resources are skipped when null."
+  description = "OCID of the load balancer."
   type        = string
-  default     = null
 }
 
 variable "backend_set_policy" {
-  description = "Load balancing policy for the backend set (e.g. ROUND_ROBIN, LEAST_CONNECTIONS, IP_HASH)."
+  description = "Load balancing policy for the backend set."
   type        = string
   default     = "ROUND_ROBIN"
+
+  validation {
+    condition     = contains(["ROUND_ROBIN", "LEAST_CONNECTIONS", "IP_HASH"], var.backend_set_policy)
+    error_message = "backend_set_policy must be one of: ROUND_ROBIN, LEAST_CONNECTIONS, IP_HASH."
+  }
 }
 
-variable "health_checker" {
-  description = "Health checker configuration. Required when load_balancer_id is set."
-  type = object({
-    protocol    = string
-    port        = number
-    url_path    = optional(string, "/")
-    return_code = optional(number, 200)
-  })
-  default = null
+variable "backend_set_health_checker_protocol" {
+  description = "Protocol for health checks. One of: HTTP, HTTPS, TCP."
+  type        = string
+
+  validation {
+    condition     = contains(["HTTP", "HTTPS", "TCP"], var.backend_set_health_checker_protocol)
+    error_message = "backend_set_health_checker_protocol must be one of: HTTP, HTTPS, TCP."
+  }
+}
+
+variable "backend_set_health_checker_port" {
+  description = "Port on the backend to use for health checks."
+  type        = number
+}
+
+variable "backend_set_health_checker_url_path" {
+  description = "URL path for HTTP/HTTPS health checks."
+  type        = string
+  default     = "/"
+}
+
+variable "backend_set_health_checker_return_code" {
+  description = "Expected HTTP return code for HTTP/HTTPS health checks."
+  type        = number
+  default     = 200
+}
+
+variable "backend_set_health_checker_interval_ms" {
+  description = "Interval between health checks in milliseconds."
+  type        = number
+  default     = 10000
+}
+
+variable "backend_set_health_checker_timeout_in_millis" {
+  description = "Timeout for each health check in milliseconds."
+  type        = number
+  default     = 3000
+}
+
+variable "backend_set_health_checker_retries" {
+  description = "Number of retries before marking the backend as unhealthy."
+  type        = number
+  default     = 3
 }
 
 variable "backend_ip_address" {
-  description = "Private IP address of the backend instance. Required when load_balancer_id is set."
+  description = "Private IP address of the backend instance."
   type        = string
-  default     = null
 }
 
 variable "backend_port" {
-  description = "Port on the backend instance to forward traffic to. Required when load_balancer_id is set."
+  description = "Port on the backend instance to forward traffic to."
   type        = number
-  default     = null
 }
 
 variable "hostname" {
-  description = "Hostname used for host-header routing policy. When null, no routing policy is created."
+  description = "Hostname used in the host-header routing rule condition."
   type        = string
-  default     = null
+}
+
+variable "routing_policy_condition_language_version" {
+  description = "Condition language version for the routing policy."
+  type        = string
+  default     = "V1"
 }
