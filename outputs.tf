@@ -8,12 +8,12 @@ output "backend_set_id" {
   value       = oci_load_balancer_backend_set.main.id
 }
 
-output "routing_policy_name" {
-  description = "Name of the routing policy."
-  value       = oci_load_balancer_load_balancer_routing_policy.main.name
+output "rule_name" {
+  description = "Name of the routing rule upserted into the shared routing policy."
+  value       = local.rule_name
 }
 
 output "backend_address" {
   description = "Registered backend address in ip:port format."
-  value       = "${oci_load_balancer_backend.main.ip_address}:${oci_load_balancer_backend.main.port}"
+  value       = "${var.backend_ip_address}:${var.backend_port}"
 }

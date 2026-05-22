@@ -14,7 +14,7 @@ variable "name" {
 }
 
 variable "load_balancer_id" {
-  description = "OCID of the load balancer."
+  description = "OCID of the load balancer (owned by iac_base)."
   type        = string
 }
 
@@ -84,13 +84,12 @@ variable "backend_port" {
   type        = number
 }
 
-variable "hostname" {
-  description = "Hostname used in the host-header routing rule condition."
+variable "routing_policy_name" {
+  description = "Name of the routing policy (owned by iac_base) into which this module upserts its rule."
   type        = string
 }
 
-variable "routing_policy_condition_language_version" {
-  description = "Condition language version for the routing policy."
+variable "routing_condition" {
+  description = "OCI routing policy condition expression. Examples: \"http.request.url.path sw '/api/v1/users'\" for path-based or \"http.request.headers[(i 'host')] eq (i 'api.domain.com')\" for host-based."
   type        = string
-  default     = "V1"
 }
